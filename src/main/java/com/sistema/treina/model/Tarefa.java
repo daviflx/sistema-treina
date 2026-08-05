@@ -20,7 +20,7 @@ public class Tarefa {
      private Long id;
 
      @NotNull
-     @Column(name = "titulo", nullable = false)
+     @Column(name = "titulo", nullable = false, length = 100)
     private String titulo;
     
     @Column(name = "descricao", nullable = true)
