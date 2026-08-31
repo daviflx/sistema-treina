@@ -1,13 +1,27 @@
 package com.sistema.treina.model;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "usuarios")
@@ -21,8 +35,9 @@ public class Usuario {
     @NotNull
     private String nome;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     @NotNull
+    @Email
     private String email;
 
     @Column(name = "senha", nullable = false, length = 20)
@@ -32,5 +47,8 @@ public class Usuario {
 
     @Column(name = "data_cadastro", nullable = false, length = 10)
     @NotNull
-    private String dataCadastro;
+    private LocalDate dataCadastro;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Projeto> projetos;
 }
