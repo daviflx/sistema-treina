@@ -37,4 +37,8 @@ public class UsuarioService {
     public void excluirUsuario(Long Id) {
         usuarioRepository.deleteById(Id);
     }
+
+    public Usuario login(String email, String senha) {
+    return usuarioRepository.findByEmailAndSenha(email, senha);
+    }
 }

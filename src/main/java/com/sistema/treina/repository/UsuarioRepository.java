@@ -6,4 +6,5 @@ import com.sistema.treina.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
+    Usuario findByEmailAndSenha(String email, String senha);
 }

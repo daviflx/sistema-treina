@@ -22,9 +22,10 @@ public class ProjetoController {
     private ProjetoService projetoService;
 
     @GetMapping("/{id}")
-    public Projeto listarProjetosPorId(@PathVariable Long projetoId) {
-        return projetoService.buscarProjetoPorId(projetoId);
+    public Projeto buscarProjetoPorId(@PathVariable Long id) {
+    return projetoService.buscarProjetoPorId(id);
     }
+    
 
     @PostMapping
     public Projeto criarProjeto(@RequestBody Projeto projeto) {
@@ -45,7 +46,7 @@ public class ProjetoController {
     }
 
     @DeleteMapping("/{id}")
-    public void excluirProjeto(@PathVariable Long Id){
+    public void excluirProjeto(@PathVariable Long Id) {
         projetoService.excluirProjeto(Id);
     }
 }

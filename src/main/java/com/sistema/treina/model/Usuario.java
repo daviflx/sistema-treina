@@ -2,7 +2,7 @@ package com.sistema.treina.model;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,5 +50,6 @@ public class Usuario {
     private LocalDate dataCadastro;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
     private List<Projeto> projetos;
 }
