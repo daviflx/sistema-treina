@@ -16,8 +16,38 @@ function Login() {
       return
     }
 
-    localStorage.setItem('nomeUsuarioLogado', usuario)
-    navigate('/area-trabalho')
+    setErro('') 
+
+    const credenciais = {
+      email: usuario, 
+      senha: senha
+    }
+
+    fetch('http://localhost:8080/usuarios/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credenciais)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Usuário ou senha incorretos.');
+      }
+      return response.json();
+    })
+    .then(dadosUsuario => {
+      const nomeParaSalvar = dadosUsuario.nome || usuario;
+      
+      // Salva o ID real do banco para o painel de projetos usar
+      localStorage.setItem('usuarioIdLogado', dadosUsuario.id);
+      localStorage.setItem('nomeUsuarioLogado', nomeParaSalvar);
+      navigate('/area-trabalho');
+    })
+    .catch(error => {
+      console.error('Erro na autenticação:', error);
+      setErro('Usuário ou senha inválidos ou servidor inacessível.');
+    });
   }
 
   return (
@@ -68,7 +98,7 @@ function Login() {
 
             <div className="mb-3">
               <label htmlFor="usuario" className="form-label">
-                Nome de usuário
+                E-mail
               </label>
 
               <input
@@ -94,10 +124,14 @@ function Login() {
               />
             </div>
 
+            {/* Link atualizado para navegar até a rota /esqueci-senha */}
             <div className="mb-3 text-end">
               <a
                 href="#"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/esqueci-senha');
+                }}
               >
                 Esqueci minha senha
               </a>

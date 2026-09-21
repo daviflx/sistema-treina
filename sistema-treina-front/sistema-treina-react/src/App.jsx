@@ -6,6 +6,7 @@ import ListaTarefas from './pages/ListaTarefas'
 import ListaProjetos from './pages/ListaProjetos'
 import ListaUsuarios from './pages/ListaUsuarios'
 import CadastroUsuario from './pages/CadastroUsuario'
+import EsqueciSenha from './pages/EsqueciSenha'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <Route path="/projetos" element={<ListaProjetos />} />
       <Route path="/tarefas" element={<ListaTarefas />} />
       <Route path="/usuarios" element={<ListaUsuarios />} />
+      <Route path="/esqueci-senha" element={<EsqueciSenha />} />
     </Routes>
   )
 }

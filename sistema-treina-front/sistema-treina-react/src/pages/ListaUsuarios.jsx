@@ -1,14 +1,30 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importado para permitir o retorno à área de trabalho
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 
 function ListaUsuarios() {
-  const navigate = useNavigate(); // Inicializa o hook de navegação
+  const navigate = useNavigate();
     
-  const usuarios = [
-    { id: 1, nome: 'Ana Souza', email: 'ana.souza@email.com', cargo: 'Administrador' },
-    { id: 2, nome: 'Carlos Eduardo', email: 'carlos.eduardo@email.com', cargo: 'Desenvolvedor' },
-    { id: 3, nome: 'Mariana Lima', email: 'mariana.lima@email.com', cargo: 'Designers' },
-  ];
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+
+  useEffect(() => {
+    
+    fetch('http://localhost:8080/usuarios')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao buscar usuários do servidor');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setUsuarios(data);
+        setCarregando(false);
+      })
+      .catch(error => {
+        console.error("Erro na requisição:", error);
+        setCarregando(false);
+      });
+  }, []);
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', paddingBottom: '40px' }}>
@@ -17,39 +33,46 @@ function ListaUsuarios() {
       </h1>
       
       <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {usuarios.map((usuario) => (
-          <div 
-            key={usuario.id} 
-            style={{ 
-              border: '1px solid #ddd', 
-              borderRadius: '6px', 
-              padding: '15px',
-              backgroundColor: '#fff',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-              textAlign: 'left'
-            }}
-          >
-            <div>
-              <h3 style={{ margin: '0 0 5px 0', color: '#222' }}>{usuario.nome}</h3>
-              <p style={{ margin: '0', color: '#666', fontSize: '14px' }}>{usuario.email}</p>
-            </div>
-            <span 
+        {carregando ? (
+          <p style={{ textAlign: 'center', color: '#666' }}>Carregando usuários...</p>
+        ) : usuarios.length === 0 ? (
+          <p style={{ textAlign: 'center', color: '#666' }}>Nenhum usuário encontrado.</p>
+        ) : (
+          usuarios.map((usuario) => (
+            <div 
+              key={usuario.id} 
               style={{ 
-                fontSize: '13px', 
-                padding: '6px 12px', 
-                borderRadius: '20px',
-                color: '#4f46e5',
-                backgroundColor: '#f5f3ff',
-                fontWeight: '500'
+                border: '1px solid #ddd', 
+                borderRadius: '6px', 
+                padding: '15px',
+                backgroundColor: '#fff',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                textAlign: 'left'
               }}
             >
-              {usuario.cargo}
-            </span>
-          </div>
-        ))}
+              <div>
+                <h3 style={{ margin: '0 0 5px 0', color: '#222' }}>{usuario.nome}</h3>
+                <p style={{ margin: '0', color: '#666', fontSize: '14px' }}>{usuario.email}</p>
+              </div>
+              <span 
+                style={{ 
+                  fontSize: '13px', 
+                  padding: '6px 12px', 
+                  borderRadius: '20px',
+                  color: '#4f46e5',
+                  backgroundColor: '#f5f3ff',
+                  fontWeight: '500'
+                }}
+              >
+                {/* Fallback caso sua entidade Usuario do Java não tenha o campo 'cargo' mapeado */}
+                {usuario.cargo || 'Membro'}
+              </span>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Container adicionado para centralizar o botão perfeitamente abaixo da lista */}

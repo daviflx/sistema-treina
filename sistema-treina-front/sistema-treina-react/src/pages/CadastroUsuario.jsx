@@ -33,15 +33,50 @@ export default function CadastroUsuario() {
       return;
     }
 
-    console.log('Dados enviados:', formData);
-    setSucesso(true);
+    if (formData.senha.length < 8) {
+      setErro('A senha deve ter no mínimo 8 caracteres.');
+      return;
+    }
 
-    setFormData({ nome: '', email: '', senha: '', confirmarSenha: '' });
+    const dataDeHoje = new Date().toISOString().split('T')[0];
 
-    // Aguarda 1.5s para exibir o alerta verde e volta para o Login (rota "/")
-    setTimeout(() => {
-      navigate('/');
-    }, 1500);
+    const dadosParaEnvio = {
+      nome: formData.nome,
+      email: formData.email,
+      senha: formData.senha,
+      dataCadastro: dataDeHoje
+    };
+
+    fetch('http://localhost:8080/usuarios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dadosParaEnvio)
+    })
+    .then(async response => {
+      if (!response.ok) {
+        const mensagemErro = await response.text();
+        throw new Error(mensagemErro || 'Falha ao registrar usuário no servidor.');
+      }
+      return response.text(); 
+    })
+    .then(data => {
+      console.log('Sucesso na API:', data);
+      setSucesso(true);
+      setFormData({ nome: '', email: '', senha: '', confirmarSenha: '' });
+
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
+    })
+    .catch(error => {
+      console.error('Erro ao enviar dados:', error);
+      setErro(error.message.includes('Failed to fetch') 
+        ? 'Erro ao conectar com o servidor. Verifique se o backend está rodando.' 
+        : error.message
+      );
+    });
   };
 
   return (
@@ -83,7 +118,7 @@ export default function CadastroUsuario() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="senha" className="form-label">Senha</label>
+                  <label htmlFor="senha" className="form-label">Senha (mínimo 8 caracteres)</label>
                   <input
                     type="password"
                     className="form-control"
