@@ -2,7 +2,7 @@ package com.sistema.treina.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sistema.treina.enums.StatusProjeto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,10 +52,9 @@ public class Projeto {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties("projetos")
     private @Valid Usuario usuario;
 
-    @OneToMany(mappedBy = "projeto")
-    @JsonIgnore
+    @OneToMany(mappedBy = "projeto", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
     private List<Tarefa> tarefas;
-
 }

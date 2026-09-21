@@ -1,6 +1,7 @@
 package com.sistema.treina.model;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sistema.treina.enums.PrioridadeTarefa;
 import com.sistema.treina.enums.StatusTarefa;
 import jakarta.persistence.Column;
@@ -50,6 +51,7 @@ public class Tarefa {
 
     @ManyToOne
     @JoinColumn(name = "projeto_id", nullable = false)
+    @JsonIgnoreProperties("tarefas")
     private Projeto projeto;
 
     @Column(name = "data_vencimento", nullable = false, length = 10)
@@ -58,6 +60,6 @@ public class Tarefa {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties("projetos")
     private @Valid Usuario usuario;
-
 }
